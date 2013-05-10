@@ -134,7 +134,7 @@ char *netname;
       net = bpnn_create(imgsize, 4, 1);
     } else {
       printf("Need some images to train on, use -t\n");
-      return;
+      return -1;
     }
   }
 

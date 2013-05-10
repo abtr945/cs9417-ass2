@@ -21,7 +21,13 @@ extern void exit();
      It scans the image name, and if it's an image of me (js) then
      it sets the target unit to HIGH; otherwise it sets it to LOW.
      Remember, units are indexed starting at 1, so target unit 1
-     is the one to change....  ***/
+     is the one to change....
+ ***/
+
+/*** Change for assignment Part I:
+     If the image name describe a person wearing sunglasses, then
+     it sets the target unit to HIGH; otherwise it sets it to LOW.
+ ***/
 
 load_target(img, net)
 IMAGE *img;
@@ -36,10 +42,24 @@ BPNN *net;
   sscanf(NAME(img), "%[^_]_%[^_]_%[^_]_%[^_]_%d.%[^_]",
     userid, head, expression, eyes, &scale, photo);
 
-  if (!strcmp(userid, "glickman")) {
-    net->target[1] = TARGET_HIGH;  /* it's me, set target to HIGH */
+  /*
+   *  Initial project target:
+   *  We want the network to recognize image with userid "glickman"
+   */
+  //if (!strcmp(userid, "glickman")) {
+  //  net->target[1] = TARGET_HIGH;  /* it's me, set target to HIGH */
+  //} else {
+  //  net->target[1] = TARGET_LOW;   /* not me, set it to LOW */
+  //}
+
+  /*
+   * Assignment Part I target:
+   * We want the network to recognize images where people wear sunglasses
+   */
+  if (!strcmp(eyes, "sunglasses")) {
+	  net->target[1] = TARGET_HIGH;   /* he's wearing sunglasses, set target to HIGH */
   } else {
-    net->target[1] = TARGET_LOW;   /* not me, set it to LOW */
+	  net->target[1] = TARGET_LOW;    /* he's not wearing sunglasses, set target to LOW */
   }
 }
 

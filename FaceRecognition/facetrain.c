@@ -127,11 +127,16 @@ char *netname;
       printf("Creating new network '%s'\n", netname);
       iimg = trainlist->list[0];
       imgsize = ROWS(iimg) * COLS(iimg);
-      /* bthom ===========================
+      /* "Sunglasses" recognizer
 	make a net with:
 	  imgsize inputs, 4 hiden units, and 1 output unit
           */
-      net = bpnn_create(imgsize, 4, 1);
+      //net = bpnn_create(imgsize, 4, 1);
+
+      /* 1-20 face recognizer
+       * 20 hidden units, 20 output units
+       */
+      net = bpnn_create(imgsize, 20, 20);
     } else {
       printf("Need some images to train on, use -t\n");
       return -1;
@@ -258,37 +263,79 @@ evaluate_performance(net, err)
 BPNN *net;
 double *err;
 {
-  double delta;
+  double delta = 0;
+  *err = 0;
+  int i;
+  int output_max = 0;
+  int index_max;
 
-  delta = net->target[1] - net->output_units[1];
+  /* Evaluating performance for neural network with 1 output unit */
 
-  *err = (0.5 * delta * delta);
+//  delta = net->target[1] - net->output_units[1];
+//
+//  *err = (0.5 * delta * delta);
+//
+//  /*** If the target unit is on... ***/
+//  if (net->target[1] > 0.5) {
+//
+//    /*** If the output unit is on, then we correctly recognized me! ***/
+//    if (net->output_units[1] > 0.5) {
+//      return (1);
+//
+//    /*** otherwise, we didn't think it was me... ***/
+//    } else {
+//      return (0);
+//    }
+//
+//  /*** Else, the target unit is off... ***/
+//  } else {
+//
+//    /*** If the output unit is on, then we mistakenly thought it was me ***/
+//    if (net->output_units[1] > 0.5) {
+//      return (0);
+//
+//    /*** else, we correctly realized that it wasn't me ***/
+//    } else {
+//      return (1);
+//    }
+//  }
 
-  /*** If the target unit is on... ***/
-  if (net->target[1] > 0.5) {
+  // TODO: need to fix the evaluation scheme to match the way the neural network update its weights
 
-    /*** If the output unit is on, then we correctly recognized me! ***/
-    if (net->output_units[1] > 0.5) {
-      return (1);
+  for (i = 1; i <= 20; i++) {
+	  // Squared error for each output unit
+	  delta = 0.5 * (net->target[i] - net->output_units[i]) * (net->target[i] - net->output_units[i]);
 
-    /*** otherwise, we didn't think it was me... ***/
-    } else {
-      return (0);
-    }
-
-  /*** Else, the target unit is off... ***/
-  } else {
-
-    /*** If the output unit is on, then we mistakenly thought it was me ***/
-    if (net->output_units[1] > 0.5) {
-      return (0);
-
-    /*** else, we correctly realized that it wasn't me ***/
-    } else {
-      return (1);
-    }
+	  // Sum of squared error for all output units
+	  *err += delta;
   }
 
+  for (i = 1; i <= 20; i++) {
+	  // compute the highest value of the output units
+	  if (net->output_units[i] > output_max) {
+		  output_max = net->output_units[i];
+		  index_max = i;
+	  }
+  }
+
+  for (i = 1; i <= 20; i++) {
+	  // If the target unit is ON
+	  if (net->target[i] > 0.5) {
+		  // If this target does not correspond to the maximum output unit => incorrect classification
+		  if (index_max != i) {
+			  return (0);
+		  } else {
+			  // If the maximum output unit is also ON => correct classification
+			  if (output_max > 0.5) {
+				  return (1);
+			  }
+			  // Else, the maximum output unit is OFF => incorrect classification
+			  else {
+				  return (0);
+			  }
+		  }
+	  }
+  }
 }
 
 

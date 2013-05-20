@@ -266,8 +266,6 @@ double *err;
   double delta = 0;
   *err = 0;
   int i;
-  int output_max = 0;
-  int index_max;
 
   /* Evaluating performance for neural network with 1 output unit */
 
@@ -300,9 +298,9 @@ double *err;
 //    }
 //  }
 
-  // TODO: need to fix the evaluation scheme to match the way the neural network update its weights
+  /* Evaluating performance for neural network with 20 output units */
 
-  for (i = 1; i <= 20; i++) {
+  for (i = 1; i <= net->output_n; i++) {
 	  // Squared error for each output unit
 	  delta = 0.5 * (net->target[i] - net->output_units[i]) * (net->target[i] - net->output_units[i]);
 
@@ -310,32 +308,34 @@ double *err;
 	  *err += delta;
   }
 
-  for (i = 1; i <= 20; i++) {
-	  // compute the highest value of the output units
-	  if (net->output_units[i] > output_max) {
-		  output_max = net->output_units[i];
-		  index_max = i;
-	  }
-  }
-
-  for (i = 1; i <= 20; i++) {
+  for (i = 1; i <= net->output_n; i++) {
 	  // If the target unit is ON
 	  if (net->target[i] > 0.5) {
-		  // If this target does not correspond to the maximum output unit => incorrect classification
-		  if (index_max != i) {
+		  // If the output unit is also ON => do nothing
+		  if (net->output_units[i] > 0.5) {
+		  }
+		  // Else, the output unit is OFF => incorrect classification
+		  else {
 			  return (0);
-		  } else {
-			  // If the maximum output unit is also ON => correct classification
-			  if (output_max > 0.5) {
-				  return (1);
-			  }
-			  // Else, the maximum output unit is OFF => incorrect classification
-			  else {
-				  return (0);
-			  }
+		  }
+	  }
+	  // Else, the target unit is OFF
+	  else {
+		  // If the output unit is ON => incorrect classification
+		  if (net->output_units[i] > 0.5) {
+			  return (0);
+		  }
+		  // Else, the output unit is also OFF => do nothing
+		  else {
 		  }
 	  }
   }
+
+  // After we go through the whole step without triggering any incorrect classification flags
+  // => the classification is correct, return 1
+  return (1);
+
+
 }
 
 

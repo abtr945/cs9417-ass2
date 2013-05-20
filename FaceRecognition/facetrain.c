@@ -136,7 +136,13 @@ char *netname;
       /* 1-20 face recognizer
        * 20 hidden units, 20 output units
        */
-      net = bpnn_create(imgsize, 20, 20);
+      //net = bpnn_create(imgsize, 20, 20);
+
+      /*
+       * Pose recognizer
+       * 6 hidden units, 4 output units
+       */
+      net = bpnn_create(imgsize, 6, 4);
     } else {
       printf("Need some images to train on, use -t\n");
       return -1;

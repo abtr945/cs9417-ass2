@@ -66,105 +66,129 @@ BPNN *net;
    * Assignment Part I - 1-20 face recognizer target:
    * We want the network to recognize images of 20 different people
    */
-  if (strcmp(userid, "an2i") == 0) {
+//  if (strcmp(userid, "an2i") == 0) {
+//	  net->target[1] = TARGET_HIGH;
+//  } else {
+//	  net->target[1] = TARGET_LOW;
+//  }
+//  if (strcmp(userid, "at33") == 0) {
+//  	  net->target[2] = TARGET_HIGH;
+//    } else {
+//  	  net->target[2] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "boland") == 0) {
+//  	  net->target[3] = TARGET_HIGH;
+//    } else {
+//  	  net->target[3] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "bpm") == 0) {
+//  	  net->target[4] = TARGET_HIGH;
+//    } else {
+//  	  net->target[4] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "ch4f") == 0) {
+//  	  net->target[5] = TARGET_HIGH;
+//    } else {
+//  	  net->target[5] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "cheyer") == 0) {
+//  	  net->target[6] = TARGET_HIGH;
+//    } else {
+//  	  net->target[6] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "choon") == 0) {
+//  	  net->target[7] = TARGET_HIGH;
+//    } else {
+//  	  net->target[7] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "danieln") == 0) {
+//  	  net->target[8] = TARGET_HIGH;
+//    } else {
+//  	  net->target[8] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "glickman") == 0) {
+//  	  net->target[9] = TARGET_HIGH;
+//    } else {
+//  	  net->target[9] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "karyadi") == 0) {
+//  	  net->target[10] = TARGET_HIGH;
+//    } else {
+//  	  net->target[10] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "kawamura") == 0) {
+//  	  net->target[11] = TARGET_HIGH;
+//    } else {
+//  	  net->target[11] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "kk49") == 0) {
+//  	  net->target[12] = TARGET_HIGH;
+//    } else {
+//  	  net->target[12] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "megak") == 0) {
+//  	  net->target[13] = TARGET_HIGH;
+//    } else {
+//  	  net->target[13] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "mitchell") == 0) {
+//  	  net->target[14] = TARGET_HIGH;
+//    } else {
+//  	  net->target[14] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "night") == 0) {
+//  	  net->target[15] = TARGET_HIGH;
+//    } else {
+//  	  net->target[15] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "phoebe") == 0) {
+//  	  net->target[16] = TARGET_HIGH;
+//    } else {
+//  	  net->target[16] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "saavik") == 0) {
+//  	  net->target[17] = TARGET_HIGH;
+//    } else {
+//  	  net->target[17] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "steffi") == 0) {
+//  	  net->target[18] = TARGET_HIGH;
+//    } else {
+//  	  net->target[18] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "sz24") == 0) {
+//  	  net->target[19] = TARGET_HIGH;
+//    } else {
+//  	  net->target[19] = TARGET_LOW;
+//    }
+//  if (strcmp(userid, "tammo") == 0) {
+//  	  net->target[20] = TARGET_HIGH;
+//    } else {
+//  	  net->target[20] = TARGET_LOW;
+//    }
+
+  /*
+   * Assignment Part I - Post recognizer
+   */
+  if (strcmp(head, "straight") == 0) {
 	  net->target[1] = TARGET_HIGH;
   } else {
 	  net->target[1] = TARGET_LOW;
   }
-  if (strcmp(userid, "at33") == 0) {
+  if (strcmp(head, "left") == 0) {
   	  net->target[2] = TARGET_HIGH;
     } else {
   	  net->target[2] = TARGET_LOW;
     }
-  if (strcmp(userid, "boland") == 0) {
+  if (strcmp(head, "right") == 0) {
   	  net->target[3] = TARGET_HIGH;
     } else {
   	  net->target[3] = TARGET_LOW;
     }
-  if (strcmp(userid, "bpm") == 0) {
+  if (strcmp(head, "up") == 0) {
   	  net->target[4] = TARGET_HIGH;
     } else {
   	  net->target[4] = TARGET_LOW;
-    }
-  if (strcmp(userid, "ch4f") == 0) {
-  	  net->target[5] = TARGET_HIGH;
-    } else {
-  	  net->target[5] = TARGET_LOW;
-    }
-  if (strcmp(userid, "cheyer") == 0) {
-  	  net->target[6] = TARGET_HIGH;
-    } else {
-  	  net->target[6] = TARGET_LOW;
-    }
-  if (strcmp(userid, "choon") == 0) {
-  	  net->target[7] = TARGET_HIGH;
-    } else {
-  	  net->target[7] = TARGET_LOW;
-    }
-  if (strcmp(userid, "danieln") == 0) {
-  	  net->target[8] = TARGET_HIGH;
-    } else {
-  	  net->target[8] = TARGET_LOW;
-    }
-  if (strcmp(userid, "glickman") == 0) {
-  	  net->target[9] = TARGET_HIGH;
-    } else {
-  	  net->target[9] = TARGET_LOW;
-    }
-  if (strcmp(userid, "karyadi") == 0) {
-  	  net->target[10] = TARGET_HIGH;
-    } else {
-  	  net->target[10] = TARGET_LOW;
-    }
-  if (strcmp(userid, "kawamura") == 0) {
-  	  net->target[11] = TARGET_HIGH;
-    } else {
-  	  net->target[11] = TARGET_LOW;
-    }
-  if (strcmp(userid, "kk49") == 0) {
-  	  net->target[12] = TARGET_HIGH;
-    } else {
-  	  net->target[12] = TARGET_LOW;
-    }
-  if (strcmp(userid, "megak") == 0) {
-  	  net->target[13] = TARGET_HIGH;
-    } else {
-  	  net->target[13] = TARGET_LOW;
-    }
-  if (strcmp(userid, "mitchell") == 0) {
-  	  net->target[14] = TARGET_HIGH;
-    } else {
-  	  net->target[14] = TARGET_LOW;
-    }
-  if (strcmp(userid, "night") == 0) {
-  	  net->target[15] = TARGET_HIGH;
-    } else {
-  	  net->target[15] = TARGET_LOW;
-    }
-  if (strcmp(userid, "phoebe") == 0) {
-  	  net->target[16] = TARGET_HIGH;
-    } else {
-  	  net->target[16] = TARGET_LOW;
-    }
-  if (strcmp(userid, "saavik") == 0) {
-  	  net->target[17] = TARGET_HIGH;
-    } else {
-  	  net->target[17] = TARGET_LOW;
-    }
-  if (strcmp(userid, "steffi") == 0) {
-  	  net->target[18] = TARGET_HIGH;
-    } else {
-  	  net->target[18] = TARGET_LOW;
-    }
-  if (strcmp(userid, "sz24") == 0) {
-  	  net->target[19] = TARGET_HIGH;
-    } else {
-  	  net->target[19] = TARGET_LOW;
-    }
-  if (strcmp(userid, "tammo") == 0) {
-  	  net->target[20] = TARGET_HIGH;
-    } else {
-  	  net->target[20] = TARGET_LOW;
     }
 }
 

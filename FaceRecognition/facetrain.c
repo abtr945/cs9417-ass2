@@ -142,7 +142,7 @@ char *netname;
        * Pose recognizer
        * 6 hidden units, 4 output units
        */
-      net = bpnn_create(imgsize, 6, 4);
+      //net = bpnn_create(imgsize, 6, 4);
     } else {
       printf("Need some images to train on, use -t\n");
       return -1;

@@ -29,9 +29,10 @@ extern void exit();
      it sets the target unit to HIGH; otherwise it sets it to LOW.
  ***/
 
-load_target(img, net)
+load_target(img, net, mode)
 IMAGE *img;
 BPNN *net;
+char* mode;
 {
   int scale;
   char userid[40], head[40], expression[40], eyes[40], photo[40];
@@ -42,154 +43,140 @@ BPNN *net;
   sscanf(NAME(img), "%[^_]_%[^_]_%[^_]_%[^_]_%d.%[^_]",
     userid, head, expression, eyes, &scale, photo);
 
-  /*
-   *  Initial project target:
-   *  We want the network to recognize image with userid "glickman"
-   */
-  //if (!strcmp(userid, "glickman")) {
-  //  net->target[1] = TARGET_HIGH;  /* it's me, set target to HIGH */
-  //} else {
-  //  net->target[1] = TARGET_LOW;   /* not me, set it to LOW */
-  //}
+  /*** If we want to laod target for a "1-to-20" Face Recognizer network ***/
+  if (strcmp(mode, "face") == 0) {
 
-  /*
-   * Assignment Part I - "sunglasses" recognizer target:
-   * We want the network to recognize images where people wear sunglasses
-   */
-  //  if (!strcmp(eyes, "sunglasses")) {
-  //	  net->target[1] = TARGET_HIGH;   /* he's wearing sunglasses, set target to HIGH */
-  //  } else {
-  //	  net->target[1] = TARGET_LOW;    /* he's not wearing sunglasses, set target to LOW */
-  //  }
-
-  /*
-   * Assignment Part I - 1-20 face recognizer target:
-   * We want the network to recognize images of 20 different people
-   */
-//  if (strcmp(userid, "an2i") == 0) {
-//	  net->target[1] = TARGET_HIGH;
-//  } else {
-//	  net->target[1] = TARGET_LOW;
-//  }
-//  if (strcmp(userid, "at33") == 0) {
-//  	  net->target[2] = TARGET_HIGH;
-//    } else {
-//  	  net->target[2] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "boland") == 0) {
-//  	  net->target[3] = TARGET_HIGH;
-//    } else {
-//  	  net->target[3] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "bpm") == 0) {
-//  	  net->target[4] = TARGET_HIGH;
-//    } else {
-//  	  net->target[4] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "ch4f") == 0) {
-//  	  net->target[5] = TARGET_HIGH;
-//    } else {
-//  	  net->target[5] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "cheyer") == 0) {
-//  	  net->target[6] = TARGET_HIGH;
-//    } else {
-//  	  net->target[6] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "choon") == 0) {
-//  	  net->target[7] = TARGET_HIGH;
-//    } else {
-//  	  net->target[7] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "danieln") == 0) {
-//  	  net->target[8] = TARGET_HIGH;
-//    } else {
-//  	  net->target[8] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "glickman") == 0) {
-//  	  net->target[9] = TARGET_HIGH;
-//    } else {
-//  	  net->target[9] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "karyadi") == 0) {
-//  	  net->target[10] = TARGET_HIGH;
-//    } else {
-//  	  net->target[10] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "kawamura") == 0) {
-//  	  net->target[11] = TARGET_HIGH;
-//    } else {
-//  	  net->target[11] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "kk49") == 0) {
-//  	  net->target[12] = TARGET_HIGH;
-//    } else {
-//  	  net->target[12] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "megak") == 0) {
-//  	  net->target[13] = TARGET_HIGH;
-//    } else {
-//  	  net->target[13] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "mitchell") == 0) {
-//  	  net->target[14] = TARGET_HIGH;
-//    } else {
-//  	  net->target[14] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "night") == 0) {
-//  	  net->target[15] = TARGET_HIGH;
-//    } else {
-//  	  net->target[15] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "phoebe") == 0) {
-//  	  net->target[16] = TARGET_HIGH;
-//    } else {
-//  	  net->target[16] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "saavik") == 0) {
-//  	  net->target[17] = TARGET_HIGH;
-//    } else {
-//  	  net->target[17] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "steffi") == 0) {
-//  	  net->target[18] = TARGET_HIGH;
-//    } else {
-//  	  net->target[18] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "sz24") == 0) {
-//  	  net->target[19] = TARGET_HIGH;
-//    } else {
-//  	  net->target[19] = TARGET_LOW;
-//    }
-//  if (strcmp(userid, "tammo") == 0) {
-//  	  net->target[20] = TARGET_HIGH;
-//    } else {
-//  	  net->target[20] = TARGET_LOW;
-//    }
-
-  /*
-   * Assignment Part I - Pose recognizer
-   */
-  if (strcmp(head, "straight") == 0) {
-	  net->target[1] = TARGET_HIGH;
-  } else {
-	  net->target[1] = TARGET_LOW;
+	  if (strcmp(userid, "an2i") == 0) {
+		  net->target[1] = TARGET_HIGH;
+	  } else {
+		  net->target[1] = TARGET_LOW;
+	  }
+	  if (strcmp(userid, "at33") == 0) {
+		  net->target[2] = TARGET_HIGH;
+		} else {
+		  net->target[2] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "boland") == 0) {
+		  net->target[3] = TARGET_HIGH;
+		} else {
+		  net->target[3] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "bpm") == 0) {
+		  net->target[4] = TARGET_HIGH;
+		} else {
+		  net->target[4] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "ch4f") == 0) {
+		  net->target[5] = TARGET_HIGH;
+		} else {
+		  net->target[5] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "cheyer") == 0) {
+		  net->target[6] = TARGET_HIGH;
+		} else {
+		  net->target[6] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "choon") == 0) {
+		  net->target[7] = TARGET_HIGH;
+		} else {
+		  net->target[7] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "danieln") == 0) {
+		  net->target[8] = TARGET_HIGH;
+		} else {
+		  net->target[8] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "glickman") == 0) {
+		  net->target[9] = TARGET_HIGH;
+		} else {
+		  net->target[9] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "karyadi") == 0) {
+		  net->target[10] = TARGET_HIGH;
+		} else {
+		  net->target[10] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "kawamura") == 0) {
+		  net->target[11] = TARGET_HIGH;
+		} else {
+		  net->target[11] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "kk49") == 0) {
+		  net->target[12] = TARGET_HIGH;
+		} else {
+		  net->target[12] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "megak") == 0) {
+		  net->target[13] = TARGET_HIGH;
+		} else {
+		  net->target[13] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "mitchell") == 0) {
+		  net->target[14] = TARGET_HIGH;
+		} else {
+		  net->target[14] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "night") == 0) {
+		  net->target[15] = TARGET_HIGH;
+		} else {
+		  net->target[15] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "phoebe") == 0) {
+		  net->target[16] = TARGET_HIGH;
+		} else {
+		  net->target[16] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "saavik") == 0) {
+		  net->target[17] = TARGET_HIGH;
+		} else {
+		  net->target[17] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "steffi") == 0) {
+		  net->target[18] = TARGET_HIGH;
+		} else {
+		  net->target[18] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "sz24") == 0) {
+		  net->target[19] = TARGET_HIGH;
+		} else {
+		  net->target[19] = TARGET_LOW;
+		}
+	  if (strcmp(userid, "tammo") == 0) {
+		  net->target[20] = TARGET_HIGH;
+		} else {
+		  net->target[20] = TARGET_LOW;
+		}
   }
-  if (strcmp(head, "left") == 0) {
-  	  net->target[2] = TARGET_HIGH;
-    } else {
-  	  net->target[2] = TARGET_LOW;
-    }
-  if (strcmp(head, "right") == 0) {
-  	  net->target[3] = TARGET_HIGH;
-    } else {
-  	  net->target[3] = TARGET_LOW;
-    }
-  if (strcmp(head, "up") == 0) {
-  	  net->target[4] = TARGET_HIGH;
-    } else {
-  	  net->target[4] = TARGET_LOW;
-    }
+
+  /*** Else, if we want to laod target for a Pose Recognizer network ***/
+  else if (strcmp(mode, "pose") == 0) {
+
+	  if (strcmp(head, "straight") == 0) {
+		  net->target[1] = TARGET_HIGH;
+	  } else {
+		  net->target[1] = TARGET_LOW;
+	  }
+	  if (strcmp(head, "left") == 0) {
+		  net->target[2] = TARGET_HIGH;
+		} else {
+		  net->target[2] = TARGET_LOW;
+		}
+	  if (strcmp(head, "right") == 0) {
+		  net->target[3] = TARGET_HIGH;
+		} else {
+		  net->target[3] = TARGET_LOW;
+		}
+	  if (strcmp(head, "up") == 0) {
+		  net->target[4] = TARGET_HIGH;
+		} else {
+		  net->target[4] = TARGET_LOW;
+		}
+  }
+
+  /*** Else, print error message ***/
+  else {
+	  printf("Invalid load target mode.\n");
+  }
 }
 
 

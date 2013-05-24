@@ -115,8 +115,8 @@ int epochs, savedelta, list_errors;
 char *netname;
 {
   IMAGE *iimg;
-  BPNN *net;
-  int train_n, epoch, i, imgsize;
+  BPNN *net_pose, *net;
+  int train_n, epoch, i, j, imgsize;
   double out_err, hid_err, sumerr;
 
   train_n = trainlist->n;
@@ -127,22 +127,23 @@ char *netname;
       printf("Creating new network '%s'\n", netname);
       iimg = trainlist->list[0];
       imgsize = ROWS(iimg) * COLS(iimg);
-      /* "Sunglasses" recognizer
-	make a net with:
-	  imgsize inputs, 4 hiden units, and 1 output unit
-          */
-      //net = bpnn_create(imgsize, 4, 1);
 
-      /* 1-20 face recognizer
-       * 20 hidden units, 20 output units
-       */
-      //net = bpnn_create(imgsize, 20, 20);
+      // We want to make the output of Pose recognizer as input for Face recognizer
 
       /*
-       * Pose recognizer
-       * 6 hidden units, 4 output units
+       * Create a network for Pose recognizer,
+       * with imgzise input, 6 hidden and 4 output units
        */
-      //net = bpnn_create(imgsize, 6, 4);
+      net_pose = bpnn_create(imgsize, 6, 4);
+
+      /*
+       * Create a network for "1-to-20" Faces recognizer,
+       * with 4 input, 20 hidden and 20 output units;
+       * since this network will take in the output of
+       * the Pose recognizer network as input
+       */
+      net = bpnn_create(4, 20, 20);
+
     } else {
       printf("Need some images to train on, use -t\n");
       return -1;
@@ -178,13 +179,24 @@ char *netname;
     sumerr = 0.0;
     for (i = 0; i < train_n; i++) {
 
-      /** Set up input units on net with image i **/
-      load_input_with_image(trainlist->list[i], net);
+      /** Set up input units on Pose recognizer net with image i **/
+      load_input_with_image(trainlist->list[i], net_pose);
 
-      /** Set up target vector for image i **/
-      load_target(trainlist->list[i], net);
+      /** Set up target vector of Pose recogniser for image i **/
+      load_target(trainlist->list[i], net_pose, "pose");
 
-      /** Run backprop, learning rate 0.3, momentum 0.3 **/
+      /** Run backprop on Pose recogniser, learning rate 0.3, momentum 0.3 **/
+      bpnn_train(net_pose, 0.3, 0.3, &out_err, &hid_err);
+
+      /** Feed the output of Pose recognizer to Face recognizer input **/
+      for (j = 1; j <= net_pose->output_n; j++) {
+    	  net->input_units[j] = net_pose->output_units[j];
+      }
+
+      /** Set up target vector of Face recognizer for image i **/
+      load_target(trainlist->list[i], net, "face");
+
+      /** Run backprop on Face recognizer, learning rate 0.3, momemtum 0.3 **/
       bpnn_train(net, 0.3, 0.3, &out_err, &hid_err);
 
       sumerr += (out_err + hid_err);
@@ -236,7 +248,7 @@ int list_errors;
       bpnn_feedforward(net);
 
       /*** Set up the target vector for this image. **/
-      load_target(il->list[i], net);
+      load_target(il->list[i], net, "face");
 
       /*** See if it got it right. ***/
       if (evaluate_performance(net, &val, 0)) {
@@ -304,7 +316,7 @@ double *err;
 //    }
 //  }
 
-  /* Evaluating performance for neural network with 20 output units */
+  /* Evaluating performance for neural network with > 1 output units */
 
   for (i = 1; i <= net->output_n; i++) {
 	  // Squared error for each output unit

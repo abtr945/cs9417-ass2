@@ -142,7 +142,7 @@ char *netname;
        * since this network will take in the output of
        * the Pose recognizer network as input
        */
-      net = bpnn_create(4, 20, 20);
+      net = bpnn_create(4, 16, 20);
 
     } else {
       printf("Need some images to train on, use -t\n");
@@ -158,17 +158,17 @@ char *netname;
 
   /*** Print out performance before any epochs have been completed. ***/
   printf("0 0.0 ");
-  performance_on_imagelist(net, trainlist, 0);
-  performance_on_imagelist(net, test1list, 0);
-  performance_on_imagelist(net, test2list, 0);
+  performance_on_imagelist(net_pose, net, trainlist, 0);
+  performance_on_imagelist(net_pose, net, test1list, 0);
+  performance_on_imagelist(net_pose, net, test2list, 0);
   printf("\n");  fflush(stdout);
   if (list_errors) {
     printf("\nFailed to classify the following images from the training set:\n");
-    performance_on_imagelist(net, trainlist, 1);
+    performance_on_imagelist(net_pose, net, trainlist, 1);
     printf("\nFailed to classify the following images from the test set 1:\n");
-    performance_on_imagelist(net, test1list, 1);
+    performance_on_imagelist(net_pose, net, test1list, 1);
     printf("\nFailed to classify the following images from the test set 2:\n");
-    performance_on_imagelist(net, test2list, 1);
+    performance_on_imagelist(net_pose, net, test2list, 1);
   }
 
   /************** Train it *****************************/
@@ -204,9 +204,9 @@ char *netname;
     printf("%g ", sumerr);
 
     /*** Evaluate performance on train, test, test2, and print perf ***/
-    performance_on_imagelist(net, trainlist, 0);
-    performance_on_imagelist(net, test1list, 0);
-    performance_on_imagelist(net, test2list, 0);
+    performance_on_imagelist(net_pose, net, trainlist, 0);
+    performance_on_imagelist(net_pose, net, test1list, 0);
+    performance_on_imagelist(net_pose, net, test2list, 0);
     printf("\n");  fflush(stdout);
 
     /*** Save network every 'savedelta' epochs ***/
@@ -227,13 +227,14 @@ char *netname;
 /*** Computes the performance of a net on the images in the imagelist. ***/
 /*** Prints out the percentage correct on the image set, and the
      average error between the target and the output units for the set. ***/
-performance_on_imagelist(net, il, list_errors)
+performance_on_imagelist(net_pose, net, il, list_errors)
+BPNN *net_pose;
 BPNN *net;
 IMAGELIST *il;
 int list_errors;
 {
   double err, val;
-  int i, n, j, correct;
+  int i, n, j, k, correct;
 
   err = 0.0;
   correct = 0;
@@ -241,10 +242,18 @@ int list_errors;
   if (n > 0) {
     for (i = 0; i < n; i++) {
 
-      /*** Load the image into the input layer. **/
-      load_input_with_image(il->list[i], net);
+      /*** Load the image into the input layer of Pose recognizer. **/
+      load_input_with_image(il->list[i], net_pose);
 
-      /*** Run the net on this input. **/
+      /*** Run the Pose recognizer net on this input. **/
+      bpnn_feedforward(net_pose);
+
+      /*** Feed the output of Pose recognizer network to Face recognizer network ***/
+      for (k = 1; k <= net_pose->output_n; k++) {
+    	  net->input_units[k] = net_pose->output_units[k];
+      }
+
+      /*** Run the Face recognizer net ***/
       bpnn_feedforward(net);
 
       /*** Set up the target vector for this image. **/
@@ -284,37 +293,6 @@ double *err;
   double delta = 0;
   *err = 0;
   int i;
-
-  /* Evaluating performance for neural network with 1 output unit */
-
-//  delta = net->target[1] - net->output_units[1];
-//
-//  *err = (0.5 * delta * delta);
-//
-//  /*** If the target unit is on... ***/
-//  if (net->target[1] > 0.5) {
-//
-//    /*** If the output unit is on, then we correctly recognized me! ***/
-//    if (net->output_units[1] > 0.5) {
-//      return (1);
-//
-//    /*** otherwise, we didn't think it was me... ***/
-//    } else {
-//      return (0);
-//    }
-//
-//  /*** Else, the target unit is off... ***/
-//  } else {
-//
-//    /*** If the output unit is on, then we mistakenly thought it was me ***/
-//    if (net->output_units[1] > 0.5) {
-//      return (0);
-//
-//    /*** else, we correctly realized that it wasn't me ***/
-//    } else {
-//      return (1);
-//    }
-//  }
 
   /* Evaluating performance for neural network with > 1 output units */
 
